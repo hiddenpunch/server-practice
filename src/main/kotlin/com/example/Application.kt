@@ -2,8 +2,10 @@ package com.example
 
 import com.example.routing.startRestServer
 import com.example.service.AuthServiceImpl
+import com.example.service.ProductServiceImpl
 
 fun main() {
     val authService = AuthServiceImpl()
-    startRestServer(authService)
+    val productService = ProductServiceImpl()
+    startRestServer(authService, productService)
 }
