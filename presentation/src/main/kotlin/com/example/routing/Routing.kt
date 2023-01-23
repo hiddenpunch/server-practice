@@ -1,8 +1,9 @@
 package com.example.routing
 
-import io.ktor.http.HttpStatusCode
+import com.example.routing.AuthRouting.authRouting
+import com.example.routing.ProductDescriptionRouting.productDescriptionRouting
+import com.example.routing.ProductRouting.productRouting
 import io.ktor.server.routing.*
-import io.ktor.server.response.*
 import io.ktor.server.application.*
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
@@ -14,10 +15,8 @@ fun startRestServer() {
 }
 fun Application.configureRouting() {
     routing {
-        route("/") {
-            get {
-                call.respond(HttpStatusCode.OK)
-            }
-        }
+        authRouting()
+        productRouting()
+        productDescriptionRouting()
     }
 }
