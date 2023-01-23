@@ -31,6 +31,7 @@ allprojects {
 
     dependencies {
         implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.0")
+        implementation("io.arrow-kt:arrow-core:1.0.1")
     }
 }
 
