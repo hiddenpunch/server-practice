@@ -2,15 +2,17 @@ package com.example.service
 
 import arrow.core.Either
 import com.example.entity.Language
+import com.example.entity.Product
+import com.example.entity.ProductDescription
 
 interface ProductService {
-    suspend fun createProduct(command: CreateProductCommand): Either<CreateProductFailure, ProductResult>
-    suspend fun updateCommission(command: UpdateCommissionCommand): Either<UpdateCommissionFailure, ProductResult>
-    suspend fun getExaminedProducts(): Either<GetExaminedProductFailure, List<ProductResult>>
-    suspend fun getUnexaminedProducts(): Either<GetUnexaminedProductFailure, List<ProductResult>>
-    suspend fun createDescription(command: CreateDescriptionCommand): Either<CreateDescriptionFailure, ProductDescriptionResult>
-    suspend fun examineProduct(productId: String): Either<ExamineProductFailure, ProductResult>
-    suspend fun updateDescription(command: UpdateDescriptionCommand): Either<UpdateDescriptionFailure, ProductDescriptionResult>
+    suspend fun createProduct(command: CreateProductCommand): Either<CreateProductFailure, Product>
+    suspend fun updateCommission(command: UpdateCommissionCommand): Either<UpdateCommissionFailure, Product>
+    suspend fun getExaminedProducts(): Either<GetExaminedProductFailure, List<Product>>
+    suspend fun getUnexaminedProducts(): Either<GetUnexaminedProductFailure, List<Product>>
+    suspend fun createDescription(command: CreateDescriptionCommand): Either<CreateDescriptionFailure, ProductDescription>
+    suspend fun examineProduct(productId: String): Either<ExamineProductFailure, Product>
+    suspend fun updateDescription(command: UpdateDescriptionCommand): Either<UpdateDescriptionFailure, ProductDescription>
     suspend fun deleteDescription(descriptionId: String): Either<DeleteDescriptionFailure, Unit>
 
     data class CreateProductCommand(
@@ -59,18 +61,4 @@ interface ProductService {
     sealed interface DeleteDescriptionFailure {
         data class InternalError(val message: String): DeleteDescriptionFailure
     }
-
-    data class ProductResult(
-        val id: String,
-        val descriptions: List<ProductDescriptionResult>,
-        val price: Double,
-        val commission: Double?,
-        val isExamined: Boolean
-    )
-
-    data class ProductDescriptionResult(
-        val language: Language,
-        val title: String,
-        val content: String
-    )
 }

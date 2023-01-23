@@ -1,9 +1,9 @@
 package com.example.routing.dto.mapper
 
-import com.example.routing.dto.Language
+import com.example.entity.Product
+import com.example.entity.ProductDescription
 import com.example.routing.dto.request.CreateProductDescriptionRequest
 import com.example.routing.dto.request.CreateProductRequest
-import com.example.routing.dto.request.PatchProductRequest
 import com.example.routing.dto.request.UpdateProductDescriptionRequest
 import com.example.routing.dto.response.ProductDescriptionResponse
 import com.example.routing.dto.response.ProductResponse
@@ -32,11 +32,11 @@ interface ProductMapper {
     ): ProductService.UpdateDescriptionCommand
 
     fun toProductDescriptionResponse(
-        result: ProductService.ProductDescriptionResult
+        result: ProductDescription
     ): ProductDescriptionResponse
     @Mapping(target = "isExamined", source = "examined")
     fun toProductResponse(
-        result: ProductService.ProductResult
+        result: Product
     ): ProductResponse
 
 }
