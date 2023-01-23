@@ -6,4 +6,11 @@ data class Product(
     val price: Double,
     val commission: Double?,
     val isExamined: Boolean
-)
+) {
+    data class Update(
+        val id: String,
+        val price: Double? = null,
+        val commission: Double? = null,
+        val isExamined: Boolean? = null
+    )
+}
