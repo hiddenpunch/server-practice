@@ -7,7 +7,7 @@ class ProductServiceImpl : ProductService {
         TODO("Not yet implemented")
     }
 
-    override suspend fun updateCommission(commission: Double): Either<ProductService.UpdateCommissionFailure, ProductService.ProductResult> {
+    override suspend fun updateCommission(command: ProductService.UpdateCommissionCommand): Either<ProductService.UpdateCommissionFailure, ProductService.ProductResult> {
         TODO("Not yet implemented")
     }
 

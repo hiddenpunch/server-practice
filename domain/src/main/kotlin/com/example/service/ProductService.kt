@@ -5,7 +5,7 @@ import com.example.entity.Language
 
 interface ProductService {
     suspend fun createProduct(command: CreateProductCommand): Either<CreateProductFailure, ProductResult>
-    suspend fun updateCommission(commission: Double): Either<UpdateCommissionFailure, ProductResult>
+    suspend fun updateCommission(command: UpdateCommissionCommand): Either<UpdateCommissionFailure, ProductResult>
     suspend fun getExaminedProducts(): Either<GetExaminedProductFailure, List<ProductResult>>
     suspend fun getUnexaminedProducts(): Either<GetUnexaminedProductFailure, List<ProductResult>>
     suspend fun createDescription(command: CreateDescriptionCommand): Either<CreateDescriptionFailure, ProductDescriptionResult>
@@ -18,12 +18,18 @@ interface ProductService {
         val content: String,
         val price: Double
     )
+    data class UpdateCommissionCommand(
+        val id: String,
+        val commission: Double
+    )
     data class CreateDescriptionCommand(
+        val productId: String,
         val language: Language,
         val title: String,
         val content: String
     )
     data class UpdateDescriptionCommand(
+        val id: String,
         val language: Language,
         val title: String,
         val content: String

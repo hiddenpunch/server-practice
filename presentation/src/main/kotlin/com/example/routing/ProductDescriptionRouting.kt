@@ -19,8 +19,9 @@ object ProductDescriptionRouting {
     fun Route.productDescriptionRouting(productService: ProductService) {
         route("product-descriptions") {
             put("{$PRODUCT_DESCRIPTION_ID_PARAMETER}") {
+                val descriptionId = call.parameters[PRODUCT_DESCRIPTION_ID_PARAMETER]!!
                 val request = call.receive<UpdateProductDescriptionRequest>()
-                productService.updateDescription(mapper.toUpdateDescriptionCommand(request)).fold(
+                productService.updateDescription(mapper.toUpdateDescriptionCommand(descriptionId, request)).fold(
                     {
                         when (it) {
                             is ProductService.UpdateDescriptionFailure.InternalError -> call.respond(HttpStatusCode.InternalServerError, it.message)
