@@ -4,6 +4,7 @@ val logback_version: String by project
 
 plugins {
     kotlin("jvm") version Version.kotlin
+    kotlin("kapt") version Version.kapt
     application
 }
 
@@ -23,6 +24,7 @@ repositories {
 allprojects {
     apply(plugin = "kotlin")
     apply(plugin = "org.gradle.java-test-fixtures")
+    apply(plugin = "kotlin-kapt")
 
     repositories {
         mavenCentral()
@@ -31,6 +33,8 @@ allprojects {
     dependencies {
         implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:${Version.kotlin}")
         implementation("io.arrow-kt:arrow-core:${Version.arrowCore}")
+        implementation("org.mapstruct:mapstruct:${Version.mapStruct}")
+        kapt("org.mapstruct:mapstruct-processor:${Version.mapStruct}")
     }
 }
 
