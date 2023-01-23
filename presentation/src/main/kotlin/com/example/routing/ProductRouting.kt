@@ -36,8 +36,9 @@ object ProductRouting {
                 )
             }
             patch("{$PRODUCT_ID_PARAMETER}") {
+                val productId = call.parameters[PRODUCT_ID_PARAMETER]!!
                 val request = call.receive<PatchProductRequest>()
-                productService.updateCommission(request.commission).fold(
+                productService.updateCommission(mapper.toUpdateCommissionCommand(productId, request.commission)).fold(
                     {
                         when (it) {
                             is ProductService.UpdateCommissionFailure.InternalError -> call.respond(HttpStatusCode.InternalServerError, it.message)
@@ -50,7 +51,8 @@ object ProductRouting {
             }
             post ("{$PRODUCT_ID_PARAMETER}/descriptions") {
                 val request = call.receive<CreateProductDescriptionRequest>()
-                productService.createDescription(mapper.toCreateDescriptionCommand(request)).fold(
+                val productId = call.parameters[PRODUCT_ID_PARAMETER]!!
+                productService.createDescription(mapper.toCreateDescriptionCommand(productId, request)).fold(
                     {
                         when (it) {
                             is ProductService.CreateDescriptionFailure.InternalError -> call.respond(HttpStatusCode.InternalServerError, it.message)
