@@ -1,7 +1,9 @@
 package com.example
 
 import com.example.routing.startRestServer
+import com.example.service.AuthServiceImpl
 
 fun main() {
-    startRestServer()
+    val authService = AuthServiceImpl()
+    startRestServer(authService)
 }

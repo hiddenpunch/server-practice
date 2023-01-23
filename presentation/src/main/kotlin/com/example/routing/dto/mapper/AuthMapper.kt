@@ -5,6 +5,7 @@ import com.example.routing.dto.request.SignUpRequest
 import com.example.routing.dto.response.SignInResponse
 import com.example.service.AuthService
 import org.mapstruct.Mapper
+import org.mapstruct.Mapping
 import org.mapstruct.ReportingPolicy
 
 @Mapper(unmappedTargetPolicy = ReportingPolicy.ERROR)
@@ -17,6 +18,7 @@ interface AuthMapper {
         request: SignInRequest
     ): AuthService.SignInCommand
 
+    @Mapping(target = "copy", ignore = true)
     fun toSignInResponse(
         result: AuthService.SignInResult
     ): SignInResponse
