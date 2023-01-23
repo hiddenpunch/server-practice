@@ -36,7 +36,7 @@ object ProductRouting {
                 )
             }
             patch("{$PRODUCT_ID_PARAMETER}") {
-                val productId = call.parameters[PRODUCT_ID_PARAMETER]!!
+                val productId = call.parameters[PRODUCT_ID_PARAMETER].orEmpty()
                 val request = call.receive<PatchProductRequest>()
                 productService.updateCommission(mapper.toUpdateCommissionCommand(productId, request.commission)).fold(
                     {
@@ -51,7 +51,7 @@ object ProductRouting {
             }
             post ("{$PRODUCT_ID_PARAMETER}/descriptions") {
                 val request = call.receive<CreateProductDescriptionRequest>()
-                val productId = call.parameters[PRODUCT_ID_PARAMETER]!!
+                val productId = call.parameters[PRODUCT_ID_PARAMETER].orEmpty()
                 productService.createDescription(mapper.toCreateDescriptionCommand(productId, request)).fold(
                     {
                         when (it) {
@@ -64,7 +64,7 @@ object ProductRouting {
                 )
             }
             post("{$PRODUCT_ID_PARAMETER}/examine") {
-                val productId = call.parameters[PRODUCT_ID_PARAMETER]!!
+                val productId = call.parameters[PRODUCT_ID_PARAMETER].orEmpty()
                 productService.examineProduct(productId).fold(
                     {
                         when (it) {

@@ -19,7 +19,7 @@ object ProductDescriptionRouting {
     fun Route.productDescriptionRouting(productService: ProductService) {
         route("product-descriptions") {
             put("{$PRODUCT_DESCRIPTION_ID_PARAMETER}") {
-                val descriptionId = call.parameters[PRODUCT_DESCRIPTION_ID_PARAMETER]!!
+                val descriptionId = call.parameters[PRODUCT_DESCRIPTION_ID_PARAMETER].orEmpty()
                 val request = call.receive<UpdateProductDescriptionRequest>()
                 productService.updateDescription(mapper.toUpdateDescriptionCommand(descriptionId, request)).fold(
                     {
@@ -33,7 +33,7 @@ object ProductDescriptionRouting {
                 )
             }
             delete("{$PRODUCT_DESCRIPTION_ID_PARAMETER}") {
-                val descriptionId = call.parameters[PRODUCT_DESCRIPTION_ID_PARAMETER]!!
+                val descriptionId = call.parameters[PRODUCT_DESCRIPTION_ID_PARAMETER].orEmpty()
                 productService.deleteDescription(descriptionId).fold(
                     {
                         when (it) {
