@@ -40,6 +40,7 @@ class ProductServiceImpl(private val repository: ProductRepository) : ProductSer
         repository.updateProduct(updateProduct).mapLeft {
             when (it) {
                 is ProductRepository.UpdateFailure.DBError -> ProductService.UpdateCommissionFailure.InternalError(it.message)
+                is ProductRepository.UpdateFailure.AllFieldsNull -> ProductService.UpdateCommissionFailure.InternalError(it.message)
             }
         }.bind()
     }
@@ -83,6 +84,7 @@ class ProductServiceImpl(private val repository: ProductRepository) : ProductSer
         repository.updateProduct(updateProduct).mapLeft {
             when (it) {
                 is ProductRepository.UpdateFailure.DBError -> ProductService.ExamineProductFailure.InternalError(it.message)
+                is ProductRepository.UpdateFailure.AllFieldsNull -> ProductService.ExamineProductFailure.InternalError(it.message)
             }
         }.bind()
     }
@@ -97,6 +99,7 @@ class ProductServiceImpl(private val repository: ProductRepository) : ProductSer
         repository.updateDescription(description).mapLeft {
             when (it) {
                 is ProductRepository.UpdateFailure.DBError -> ProductService.UpdateDescriptionFailure.InternalError(it.message)
+                is ProductRepository.UpdateFailure.AllFieldsNull -> ProductService.UpdateDescriptionFailure.InternalError(it.message)
             }
         }.bind()
     }

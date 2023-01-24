@@ -22,7 +22,7 @@ fun startRestServer(authService: AuthService, productService: ProductService) {
                     ignoreUnknownKeys = false
                     prettyPrint = true
                     isLenient = true
-                    explicitNulls = false
+                    explicitNulls = true
                 }
             )
         }

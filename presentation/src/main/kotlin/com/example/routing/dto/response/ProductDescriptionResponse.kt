@@ -5,6 +5,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class ProductDescriptionResponse(
+    val id: String,
     val language: Language,
     val title: String,
     val content: String
