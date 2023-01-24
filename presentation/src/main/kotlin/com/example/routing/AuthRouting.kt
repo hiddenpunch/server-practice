@@ -39,7 +39,7 @@ object AuthRouting {
                     }
                 },
                 {
-                    call.respond(HttpStatusCode.Accepted, mapper.toSignInResponse(it))
+                    call.respond(HttpStatusCode.OK, mapper.toSignInResponse(it))
                 }
             )
         }
