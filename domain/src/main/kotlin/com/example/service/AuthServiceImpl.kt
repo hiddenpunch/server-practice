@@ -7,7 +7,10 @@ import com.example.entity.User
 import com.example.repository.UserRepository
 import java.util.UUID
 
-class AuthServiceImpl(private val repository: UserRepository) : AuthService {
+class AuthServiceImpl(
+    private val repository: UserRepository,
+    private val tokenService: TokenService
+) : AuthService {
     override suspend fun signIn(command: AuthService.SignInCommand): Either<AuthService.SignInFailure, AuthService.SignInResult> = either {
         val user = repository.findUserByEmail(command.email).mapLeft {
             when (it) {
@@ -17,7 +20,12 @@ class AuthServiceImpl(private val repository: UserRepository) : AuthService {
 
         // Todo: hash and create token
         if (command.password == user.passwordHash) {
-            AuthService.SignInResult("")
+            val token = tokenService.createAccessToken(user).mapLeft {
+                when (it) {
+                    is TokenService.CreateAccessTokenFailure.InternalError -> AuthService.SignInFailure.InternalError(it.message)
+                }
+            }.bind()
+            AuthService.SignInResult(token)
         } else {
             Either.Left(AuthService.SignInFailure.WrongCredential("No Such Credential")).bind()
         }
