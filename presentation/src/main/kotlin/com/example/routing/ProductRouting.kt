@@ -1,9 +1,11 @@
 package com.example.routing
 
+import com.example.routing.dto.UserRole
 import com.example.routing.dto.mapper.ProductMapper
 import com.example.routing.dto.request.CreateProductDescriptionRequest
 import com.example.routing.dto.request.CreateProductRequest
 import com.example.routing.dto.request.PatchProductRequest
+import com.example.routing.plugin.withRole
 import com.example.service.ProductService
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.call
@@ -22,71 +24,75 @@ object ProductRouting {
 
     fun Route.productRouting(productService: ProductService) {
         route("/products") {
-            post {
-                val request = call.receive<CreateProductRequest>()
-                productService.createProduct(mapper.toCreateProductCommand(request)).fold(
-                    {
-                        when (it) {
-                            is ProductService.CreateProductFailure.InternalError -> call.respond(HttpStatusCode.InternalServerError, it.message)
+            withRole(UserRole.WRITER) {
+                post {
+                    val request = call.receive<CreateProductRequest>()
+                    productService.createProduct(mapper.toCreateProductCommand(request)).fold(
+                        {
+                            when (it) {
+                                is ProductService.CreateProductFailure.InternalError -> call.respond(HttpStatusCode.InternalServerError, it.message)
+                            }
+                        },
+                        {
+                            call.respond(HttpStatusCode.Created, mapper.toProductResponse(it))
                         }
-                    },
-                    {
-                        call.respond(HttpStatusCode.Created, mapper.toProductResponse(it))
-                    }
-                )
+                    )
+                }
             }
-            patch("{$PRODUCT_ID_PARAMETER}") {
-                val productId = call.parameters[PRODUCT_ID_PARAMETER].orEmpty()
-                val request = call.receive<PatchProductRequest>()
-                productService.updateCommission(mapper.toUpdateCommissionCommand(productId, request.commission)).fold(
-                    {
-                        when (it) {
-                            is ProductService.UpdateCommissionFailure.InternalError -> call.respond(HttpStatusCode.InternalServerError, it.message)
+            withRole(UserRole.EDITOR) {
+                patch("{$PRODUCT_ID_PARAMETER}") {
+                    val productId = call.parameters[PRODUCT_ID_PARAMETER].orEmpty()
+                    val request = call.receive<PatchProductRequest>()
+                    productService.updateCommission(mapper.toUpdateCommissionCommand(productId, request.commission)).fold(
+                        {
+                            when (it) {
+                                is ProductService.UpdateCommissionFailure.InternalError -> call.respond(HttpStatusCode.InternalServerError, it.message)
+                            }
+                        },
+                        {
+                            call.respond(HttpStatusCode.OK, mapper.toProductResponse(it))
                         }
-                    },
-                    {
-                        call.respond(HttpStatusCode.OK, mapper.toProductResponse(it))
-                    }
-                )
-            }
-            post ("{$PRODUCT_ID_PARAMETER}/descriptions") {
-                val request = call.receive<CreateProductDescriptionRequest>()
-                val productId = call.parameters[PRODUCT_ID_PARAMETER].orEmpty()
-                productService.createDescription(mapper.toCreateDescriptionCommand(productId, request)).fold(
-                    {
-                        when (it) {
-                            is ProductService.CreateDescriptionFailure.InternalError -> call.respond(HttpStatusCode.InternalServerError, it.message)
+                    )
+                }
+                post ("{$PRODUCT_ID_PARAMETER}/descriptions") {
+                    val request = call.receive<CreateProductDescriptionRequest>()
+                    val productId = call.parameters[PRODUCT_ID_PARAMETER].orEmpty()
+                    productService.createDescription(mapper.toCreateDescriptionCommand(productId, request)).fold(
+                        {
+                            when (it) {
+                                is ProductService.CreateDescriptionFailure.InternalError -> call.respond(HttpStatusCode.InternalServerError, it.message)
+                            }
+                        },
+                        {
+                            call.respond(HttpStatusCode.Created, mapper.toProductDescriptionResponse(it))
                         }
-                    },
-                    {
-                        call.respond(HttpStatusCode.Created, mapper.toProductDescriptionResponse(it))
-                    }
-                )
-            }
-            post("{$PRODUCT_ID_PARAMETER}/examine") {
-                val productId = call.parameters[PRODUCT_ID_PARAMETER].orEmpty()
-                productService.examineProduct(productId).fold(
-                    {
-                        when (it) {
-                            is ProductService.ExamineProductFailure.InternalError -> call.respond(HttpStatusCode.InternalServerError, it.message)
+                    )
+                }
+                post("{$PRODUCT_ID_PARAMETER}/examine") {
+                    val productId = call.parameters[PRODUCT_ID_PARAMETER].orEmpty()
+                    productService.examineProduct(productId).fold(
+                        {
+                            when (it) {
+                                is ProductService.ExamineProductFailure.InternalError -> call.respond(HttpStatusCode.InternalServerError, it.message)
+                            }
+                        },
+                        {
+                            call.respond(HttpStatusCode.OK, mapper.toProductResponse(it))
                         }
-                    },
-                    {
-                        call.respond(HttpStatusCode.OK, mapper.toProductResponse(it))
-                    }
-                )
-            }
-            get("unexamined") {
-                productService.getUnexaminedProducts().fold(
-                    {
-                        when (it) {
-                            is ProductService.GetUnexaminedProductFailure.InternalError -> call.respond(HttpStatusCode.InternalServerError, it.message)
+                    )
+                }
+                get("unexamined") {
+                    productService.getUnexaminedProducts().fold(
+                        {
+                            when (it) {
+                                is ProductService.GetUnexaminedProductFailure.InternalError -> call.respond(HttpStatusCode.InternalServerError, it.message)
+                            }
+                        },
+                        {
+                            call.respond(HttpStatusCode.OK, it.map { product -> mapper.toProductResponse(product) })
                         }
-                    },
-                    {
-                        call.respond(HttpStatusCode.OK, it.map { product -> mapper.toProductResponse(product) })
-                    }
-                )
+                    )
+                }
             }
             get("examined") {
                 productService.getExaminedProducts().fold(
