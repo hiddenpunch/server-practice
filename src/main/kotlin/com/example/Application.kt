@@ -15,7 +15,7 @@ fun main() {
     val connection = DatabaseConnection(databaseConfiguration)
 
     val userRepository = UserRepositoryImpl(connection)
-    val productRepository = ProductRepositoryImpl()
+    val productRepository = ProductRepositoryImpl(connection)
     val authService = AuthServiceImpl(userRepository)
     val productService = ProductServiceImpl(productRepository)
     startRestServer(authService, productService)

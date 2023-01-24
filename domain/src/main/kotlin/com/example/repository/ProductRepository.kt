@@ -17,6 +17,7 @@ interface ProductRepository {
     }
     sealed interface UpdateFailure {
         data class DBError(val message: String): UpdateFailure
+        data class AllFieldsNull(val message: String): UpdateFailure
     }
     sealed interface DeleteFailure {
         data class DBError(val message: String): DeleteFailure
