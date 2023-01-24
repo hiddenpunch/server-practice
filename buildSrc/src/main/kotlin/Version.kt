@@ -16,4 +16,5 @@ object Version {
     const val jasyncPostgresql = "2.0.7"
     const val kotlinxSerialization = "1.4.1"
     const val typesafeConfig = "1.4.2"
+    const val javaJwt = "4.2.1"
 }
