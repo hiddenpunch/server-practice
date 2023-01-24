@@ -5,6 +5,7 @@ import arrow.core.computations.either
 import arrow.core.leftIfNull
 import com.example.entity.User
 import com.example.repository.UserRepository
+import com.example.util.HashUtil
 import java.util.UUID
 
 class AuthServiceImpl(
@@ -18,8 +19,7 @@ class AuthServiceImpl(
             }
         }.leftIfNull { AuthService.SignInFailure.WrongCredential("No Such Credential") }.bind()
 
-        // Todo: hash and create token
-        if (command.password == user.passwordHash) {
+        if (HashUtil.hashSHA256(command.password) == user.passwordHash) {
             val token = tokenService.createAccessToken(user).mapLeft {
                 when (it) {
                     is TokenService.CreateAccessTokenFailure.InternalError -> AuthService.SignInFailure.InternalError(it.message)
@@ -35,11 +35,10 @@ class AuthServiceImpl(
         val user = User(
             id = UUID.randomUUID().toString(),
             email = command.email,
-            passwordHash = command.password,
+            passwordHash = HashUtil.hashSHA256(command.password),
             role = command.role
         )
 
-        // Todo: hash and duplicated credential
         repository.createUser(user).mapLeft {
             when (it) {
                 is UserRepository.CreateFailure.DBError -> AuthService.SignUpFailure.InternalError(it.message)
