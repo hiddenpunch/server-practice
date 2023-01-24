@@ -5,6 +5,7 @@ val logback_version: String by project
 plugins {
     kotlin("jvm") version Version.kotlin
     kotlin("kapt") version Version.kapt
+    kotlin("plugin.serialization") version Version.kotlin
     application
 }
 
@@ -25,6 +26,7 @@ allprojects {
     apply(plugin = "kotlin")
     apply(plugin = "org.gradle.java-test-fixtures")
     apply(plugin = "kotlin-kapt")
+    apply(plugin = "kotlinx-serialization")
 
     repositories {
         mavenCentral()
@@ -35,6 +37,8 @@ allprojects {
         implementation("io.arrow-kt:arrow-core:${Version.arrowCore}")
         implementation("org.mapstruct:mapstruct:${Version.mapStruct}")
         kapt("org.mapstruct:mapstruct-processor:${Version.mapStruct}")
+        implementation("com.typesafe:config:${Version.typesafeConfig}")
+        implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:${Version.kotlinxSerialization}")
     }
 }
 
@@ -42,6 +46,7 @@ dependencies {
     implementation(project(":presentation"))
     implementation(project(":domain"))
     implementation(project(":infrastructure"))
+    implementation("ch.qos.logback:logback-classic:$logback_version")
 }
 
 tasks.getByName<Jar>("jar") {
