@@ -1,5 +1,6 @@
 package com.example.routing
 
+import com.example.entity.Language
 import com.example.routing.dto.UserRole
 import com.example.routing.dto.mapper.ProductMapper
 import com.example.routing.dto.request.CreateProductDescriptionRequest
@@ -95,7 +96,13 @@ object ProductRouting {
                 }
             }
             get("examined") {
-                productService.getExaminedProducts().fold(
+                val language = when(call.request.queryParameters["language"]) {
+                    "KR" -> Language.KR
+                    "EN" -> Language.EN
+                    "CN" -> Language.CN
+                    else -> null
+                }
+                productService.getExaminedProducts(language).fold(
                     {
                         when (it) {
                             is ProductService.GetExaminedProductFailure.InternalError -> call.respond(HttpStatusCode.InternalServerError, it.message)
