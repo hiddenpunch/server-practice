@@ -1,0 +1,8 @@
+AuthorizationHeader:
+  description: "jwt 토큰 헤더"
+  name: Authorization
+  in: header
+  required: true
+  schema:
+    type: string
+    example: "Bearer <JWT TOKEN>"

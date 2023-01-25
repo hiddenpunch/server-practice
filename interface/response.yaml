@@ -1,0 +1,8 @@
+SignInResponse:
+  description: 로그인 정상 응답
+  type: object
+  required:
+    - accessToken
+  properties:
+    accessToken:
+      type: string

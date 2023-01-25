@@ -1,0 +1,190 @@
+openapi: 3.0.3
+info:
+  title: Server Practice
+  description: User <-> Product model demo server
+  version: 0.0.1
+servers:
+  - url: localhost:8080
+    description: local server
+paths:
+  /signin:
+    post:
+      description: 로그인
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: 'request.yaml#/SignInRequest'
+      responses:
+        200:
+          description: 로그인 성공
+          content:
+            application/json:
+              schema:
+                $ref: 'response.yaml#/SignInResponse'
+
+  /signup:
+    post:
+      description: 회원가입
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: 'request.yaml#/SignUpRequest'
+      responses:
+        201:
+          description: 가입 성공
+
+  /products:
+    post:
+      description: 상품 작성
+      parameters:
+        - $ref: 'header.yaml#/AuthorizationHeader'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: 'request.yaml#/CreateProductRequest'
+      responses:
+        201:
+          description: 상품 생성
+          content:
+            application/json:
+              schema:
+                $ref: 'product.yaml#/Product'
+
+  /products/{product-id}:
+    patch:
+      description: 상품 수정 (수수료 수정)
+      parameters:
+        - $ref: 'header.yaml#/AuthorizationHeader'
+        - name: product-id
+          required: true
+          in: path
+          description: product id
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: 'request.yaml#/PatchProductRequest'
+      responses:
+        200:
+          description: 수정 성공
+          content:
+            application/json:
+              schema:
+                $ref: 'product.yaml#/Product'
+
+
+  /products/{product-id}/descriptions:
+    post:
+      description: 상품 정보 추가
+      parameters:
+        - $ref: 'header.yaml#/AuthorizationHeader'
+        - name: product-id
+          required: true
+          in: path
+          description: product id
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: 'request.yaml#/CreateDescriptionRequest'
+      responses:
+        201:
+          description: 상품 정보 생성
+          content:
+            application/json:
+              schema:
+                $ref: 'product.yaml#/ProductDescription'
+
+  /products/{product-id}/examine:
+    post:
+      description: 검토 완료
+      parameters:
+        - $ref: 'header.yaml#/AuthorizationHeader'
+        - name: product-id
+          required: true
+          in: path
+          description: product id
+          schema:
+            type: string
+      responses:
+        200:
+          description: 검토 완료 성공
+          content:
+            application/json:
+              schema:
+                $ref: 'product.yaml#/Product'
+
+  /products/examined:
+    get:
+      description: 검토 완료된 상품들 가져오기
+      parameters:
+        - $ref: 'header.yaml#/AuthorizationHeader'
+        - name: language
+          required: false
+          in: query
+          description: 상품 정보를 표시할 언어
+          schema:
+            type: string
+            enum:
+              - KR
+              - EN
+              - CN
+      responses:
+        200:
+          description: 검토 완료 상품 목록
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: 'product.yaml#/Product'
+
+  /product-descriptions/{product-description-id}:
+    put:
+      description: 상품 정보 수정
+      parameters:
+        - $ref: 'header.yaml#/AuthorizationHeader'
+        - name: product-description-id
+          required: true
+          in: path
+          description: product description id
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: 'request.yaml#/UpdateDescriptionRequest'
+      responses:
+        200:
+          description: 상품 정보 수정 성공
+          content:
+            application/json:
+              schema:
+                $ref: 'product.yaml#/ProductDescription'
+    delete:
+      description: 상품 정보 삭제
+      parameters:
+        - $ref: 'header.yaml#/AuthorizationHeader'
+        - name: product-description-id
+          required: true
+          in: path
+          description: product description id
+          schema:
+            type: string
+      responses:
+        200:
+          description: 상품 정보 삭제 성공
