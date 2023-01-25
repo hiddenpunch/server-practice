@@ -45,12 +45,19 @@ class ProductServiceImpl(private val repository: ProductRepository) : ProductSer
         }.bind()
     }
 
-    override suspend fun getExaminedProducts(): Either<ProductService.GetExaminedProductFailure, List<Product>> = either {
-        repository.findProductsByIsExamined(true).mapLeft {
+    override suspend fun getExaminedProducts(language: Language?): Either<ProductService.GetExaminedProductFailure, List<Product>> = either {
+        val products = repository.findProductsByIsExamined(true).mapLeft {
             when (it) {
                 is ProductRepository.FindFailure.DBError -> ProductService.GetExaminedProductFailure.InternalError(it.message)
             }
         }.bind()
+        if (language != null) {
+            products.map {
+                it.copy(
+                    descriptions = it.descriptions.filter { it.language == language }
+                )
+            }
+        } else products
     }
 
     override suspend fun getUnexaminedProducts(): Either<ProductService.GetUnexaminedProductFailure, List<Product>> = either {

@@ -8,7 +8,7 @@ import com.example.entity.ProductDescription
 interface ProductService {
     suspend fun createProduct(command: CreateProductCommand): Either<CreateProductFailure, Product>
     suspend fun updateCommission(command: UpdateCommissionCommand): Either<UpdateCommissionFailure, Product>
-    suspend fun getExaminedProducts(): Either<GetExaminedProductFailure, List<Product>>
+    suspend fun getExaminedProducts(language: Language?): Either<GetExaminedProductFailure, List<Product>>
     suspend fun getUnexaminedProducts(): Either<GetUnexaminedProductFailure, List<Product>>
     suspend fun createDescription(command: CreateDescriptionCommand): Either<CreateDescriptionFailure, ProductDescription>
     suspend fun examineProduct(productId: String): Either<ExamineProductFailure, Product>
