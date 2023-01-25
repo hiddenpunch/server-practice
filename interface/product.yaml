@@ -1,0 +1,44 @@
+Product:
+  description: 상품
+  type: object
+  required:
+    - id
+    - descriptions
+    - price
+    - isExamined
+  properties:
+    id:
+      type: string
+    descriptions:
+      type: array
+      items:
+    price:
+      type: number
+      format: double
+    commission:
+      type: number
+      format: double
+    isExamined:
+      type: boolean
+
+ProductDescription:
+  description: 상품 정보
+  type: object
+  required:
+    - id
+    - language
+    - title
+    - content
+  properties:
+    id:
+      type: string
+    language:
+      type: string
+      enum:
+        - KR
+        - EN
+        - CN
+    title:
+      type: string
+    content:
+      type: string

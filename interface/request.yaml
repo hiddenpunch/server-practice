@@ -1,0 +1,93 @@
+SignInRequest:
+  description: 로그인 요청 필드
+  type: object
+  required:
+    - email
+    - password
+  properties:
+    email:
+      type: string
+    password:
+      type: string
+
+SignUpRequest:
+  type: object
+  required:
+    - email
+    - password
+    - role
+  properties:
+    email:
+      type: string
+    password:
+      type: string
+    role:
+      type: string
+      enum:
+        - WRITER
+        - EDITOR
+        - CUSTOMER
+
+CreateProductRequest:
+  type: object
+  required:
+    - title
+    - content
+    - price
+  properties:
+    title:
+      type: string
+    content:
+      type: string
+    price:
+      type: number
+      format: double
+
+
+PatchProductRequest:
+  description: 상품 수정 form
+  type: object
+  required:
+    - commission
+  properties:
+    commission:
+      type: number
+      format: double
+
+CreateDescriptionRequest:
+  description: 상품 정보 생성 form
+  type: object
+  required:
+    - language
+    - title
+    - content
+  properties:
+    language:
+      type: string
+      enum:
+        - KR
+        - EN
+        - CN
+    title:
+      type: string
+    content:
+      type: string
+
+UpdateDescriptionRequest:
+  description: 상품 정보 수정 form
+  type: object
+  required:
+    - language
+    - title
+    - content
+  properties:
+    language:
+      type: string
+      enum:
+        - KR
+        - EN
+        - CN
+    title:
+      type: string
+    content:
+      type: string
